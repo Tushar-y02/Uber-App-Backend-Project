@@ -17,4 +17,15 @@ router.post(
   userController.userRegister
 );
 
+router.post(
+  "/login",
+  [
+    body("email").isEmail().withMessage("Invalid Email"),
+    body("password")
+      .isLength({ min: 3 })
+      .withMessage("Password must be atleast three character long"),
+  ],
+  userController.userLogin
+);
+
 module.exports = router;

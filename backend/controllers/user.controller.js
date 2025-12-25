@@ -11,7 +11,8 @@ module.exports.userRegister = async (req, res, next) => {
     });
   }
 
-  console.log(req.body);
+  //   console.log(req.body);
+
   const { fullname, email, password } = req.body;
 
   const hashPassworded = await userModel.hashPassword(password);
@@ -27,5 +28,33 @@ module.exports.userRegister = async (req, res, next) => {
 
   res.json({ token, user });
 
-  return next();
+  //   return next();
+};
+
+module.exports.userLogin = async (req, res) => {
+  const error = validationResult(req);
+
+  if (!error.isEmpty()) {
+    return res.status(400).json({
+      errors: error.array(),
+    });
+  }
+
+  const { email, password } = req.body;
+
+  const user = await userModel.findOne({ email }).select("+password");
+
+  if (!user) {
+    return res.status(401).json({ message: "Invalid email or password" });
+  }
+
+  const isMatch = user.comparePassword(password);
+
+  if (!isMatch) {
+    return res.status(401).json({ message: "Invalid email or password" });
+  }
+
+  const token = user.generateAuthToken();
+
+  res.json({ token, user });
 };
