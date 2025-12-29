@@ -73,7 +73,7 @@ module.exports.userLogOut = async (req, res) => {
   res.clearCookie("token");
 
   // step-2: store the token and create the token in mongoose
-  const token = req.cookies.token || req.headers.authorization.split(" ")[1];
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
   await blackListTokenModel.create({ token });
 

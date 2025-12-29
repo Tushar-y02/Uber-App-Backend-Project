@@ -24,11 +24,9 @@ async function autheUser(req, res, next) {
 
   // step-3: decode the token and find the user
   try {
-    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // console.log(decode);
-
-    const user = await userModel.findById(decode._id);
+    const user = await userModel.findById(decoded._id);
     // console.log(user);
 
     req.user = user;
